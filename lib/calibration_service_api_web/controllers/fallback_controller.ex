@@ -8,6 +8,12 @@ defmodule CalibrationServiceApiWeb.FallbackController do
 
   # This clause is an example of how to handle resources that cannot be found.
 
+  def call(conn, {:error, %{message: "User not found"} = message}) do
+    conn
+    |> put_status(:not_found)
+    |> json(%{"error" => message})
+  end
+
   def call(conn, {:error, message}) do
     conn
     |> put_status(:unprocessable_entity)

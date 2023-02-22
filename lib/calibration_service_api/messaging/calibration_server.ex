@@ -21,6 +21,10 @@ defmodule CalibrationServiceApi.Messaging.CalibrationServer do
     GenServer.call(pid, session)
   end
 
+  def handle_call(:get_current_state, _from, state) do
+    {:reply, state, state}
+  end
+
   def handle_call(msg, _from, state) do
     try do
       response =
@@ -44,6 +48,10 @@ defmodule CalibrationServiceApi.Messaging.CalibrationServer do
 
         {:reply, %{"precheck1" => :timeout}, updated_calibration_session}
     end
+  end
+
+  def get_current_state(pid) do
+    GenServer.call(pid, :get_current_state)
   end
 
   defp get_correct_status_from_device_response(%{"precheck1" => true}), do: :finished

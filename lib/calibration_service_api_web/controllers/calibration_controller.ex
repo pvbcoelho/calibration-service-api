@@ -12,4 +12,12 @@ defmodule CalibrationServiceApiWeb.CalibrationController do
       |> json(response)
     end
   end
+
+  def get_current_session(conn, %{"user_email" => user_email} = _params) do
+    with {:ok, response} <- ElixirInterviewStarter.get_current_session(user_email) do
+      conn
+      |> put_status(:ok)
+      |> json(response)
+    end
+  end
 end

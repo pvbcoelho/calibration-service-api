@@ -71,6 +71,53 @@ defmodule CalibrationServiceApiWeb.CalibrationControllerTest do
     end
   end
 
+  describe "get calibration session" do
+    test "should return the ongoing calibration session when a valid user email is given", %{
+      conn: conn
+    } do
+      calibration_session_mock =
+        get_calibration_session(
+          @valid_user_email,
+          @session_precheck_1,
+          @status_finished
+        )
+
+      post(conn, Routes.calibration_path(conn, :start, user_email: @valid_user_email))
+
+      conn =
+        get(
+          conn,
+          Routes.calibration_path(conn, :get_current_session, @valid_user_email)
+        )
+
+      calibration_session = json_response(conn, 200)
+      assert calibration_session_mock.user_device == calibration_session["user_device"]
+      assert calibration_session_mock.session == calibration_session["session"]
+      assert calibration_session_mock.status == calibration_session["status"]
+    end
+
+    test "should return an error when there is no on going calibration session with the given email",
+         %{
+           conn: conn
+         } do
+      user_not_found_error_message = %{
+        "error" => %{
+          "description" =>
+            "There is not calibration process for the provide user `#{@valid_user_email}`",
+          "message" => "User not found"
+        }
+      }
+
+      conn =
+        get(
+          conn,
+          Routes.calibration_path(conn, :get_current_session, @valid_user_email)
+        )
+
+      assert user_not_found_error_message == json_response(conn, 404)
+    end
+  end
+
   defp get_calibration_session(user_email, session, status),
     do: %{
       user_device: user_email,
@@ -78,11 +125,9 @@ defmodule CalibrationServiceApiWeb.CalibrationControllerTest do
       status: status
     }
 
-    defp get_fail_message(description),
+  defp get_fail_message(description),
     do: %{"error" => %{"message" => "Calibration failure", "description" => description}}
 
-    defp get_error_message(description),
+  defp get_error_message(description),
     do: %{"error" => %{"message" => "Calibration error", "description" => description}}
-
-
 end

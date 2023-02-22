@@ -46,7 +46,7 @@ defmodule CalibrationServiceApi.ElixirInterviewStarter do
   defp start_calibration_process({:error, {:already_started, _pid}}),
     do:
       {:error,
-       %{message: "Calibration failure", description: "Calibration session already on going"}}
+       %{message: "Calibration error", description: "Calibration session already on going"}}
 
   @spec start_precheck_2(any) :: {:ok, :ok}
   @doc """
@@ -60,11 +60,23 @@ defmodule CalibrationServiceApi.ElixirInterviewStarter do
     {:ok, :ok}
   end
 
-  @spec get_current_session(user_email :: String.t()) :: {:ok, CalibrationSession.t() | nil}
+  @spec get_current_session(user_email :: String.t()) ::
+          {:error, %{description: String.t(), message: String.t()}}
+          | {:ok, CalibrationSession.t()}
   @doc """
-  Retrieves the ongoing `CalibrationSession` for the provided user, if they have one
+  Retrieves the ongoing `CalibrationSession` for the provided user, if they have one otherwise an error is returned
   """
-  def get_current_session(_user_email) do
-    {:ok, nil}
+  def get_current_session(user_email) do
+    case :global.whereis_name(user_email) do
+      :undefined ->
+        {:error,
+         %{
+           message: "User not found",
+           description: "There is not calibration process for the provide user `#{user_email}`"
+         }}
+
+      pid ->
+        {:ok, CalibrationServer.get_current_state(pid)}
+    end
   end
 end
