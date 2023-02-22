@@ -61,20 +61,14 @@ defmodule CalibrationServiceApi.ElixirInterviewStarter do
   end
 
   @spec get_current_session(user_email :: String.t()) ::
-          {:error, %{description: String.t(), message: String.t()}}
+          nil
           | {:ok, CalibrationSession.t()}
   @doc """
   Retrieves the ongoing `CalibrationSession` for the provided user, if they have one otherwise an error is returned
   """
   def get_current_session(user_email) do
     case :global.whereis_name(user_email) do
-      :undefined ->
-        {:error,
-         %{
-           message: "User not found",
-           description: "There is not calibration process for the provide user `#{user_email}`"
-         }}
-
+      :undefined -> nil
       pid ->
         {:ok, CalibrationServer.get_current_state(pid)}
     end

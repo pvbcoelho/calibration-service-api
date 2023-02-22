@@ -68,16 +68,7 @@ defmodule CalibrationServiceApi.ElixirInterviewStarterTest do
     end
 
     test "get_current_session/1 returns error if the provided user has no ongoing calibrationo session" do
-      user_not_found_error_message =
-        {:error,
-         %{
-           message: "User not found",
-           description:
-             "There is not calibration process for the provide user `#{@valid_user_email}`"
-         }}
-
-      assert user_not_found_error_message ==
-               ElixirInterviewStarter.get_current_session(@valid_user_email)
+      assert nil == ElixirInterviewStarter.get_current_session(@valid_user_email)
     end
   end
 

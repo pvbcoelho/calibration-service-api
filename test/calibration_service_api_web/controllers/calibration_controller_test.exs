@@ -100,21 +100,13 @@ defmodule CalibrationServiceApiWeb.CalibrationControllerTest do
          %{
            conn: conn
          } do
-      user_not_found_error_message = %{
-        "error" => %{
-          "description" =>
-            "There is not calibration process for the provide user `#{@valid_user_email}`",
-          "message" => "User not found"
-        }
-      }
-
       conn =
         get(
           conn,
           Routes.calibration_path(conn, :get_current_session, @valid_user_email)
         )
 
-      assert user_not_found_error_message == json_response(conn, 404)
+      assert %{"errors" => %{"detail" => "Not Found"}} == json_response(conn, 404)
     end
   end
 
