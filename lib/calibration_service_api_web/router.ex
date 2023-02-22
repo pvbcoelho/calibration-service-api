@@ -7,5 +7,6 @@ defmodule CalibrationServiceApiWeb.Router do
 
   scope "/api", CalibrationServiceApiWeb do
     pipe_through :api
+    post("/start", CalibrationController, :start)
   end
 end
