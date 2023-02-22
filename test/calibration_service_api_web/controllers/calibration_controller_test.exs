@@ -47,7 +47,7 @@ defmodule CalibrationServiceApiWeb.CalibrationControllerTest do
     end
 
     test "should return an error when device precheck incorrectly", %{conn: conn} do
-      mock_reponse = get_error_message("Precheck 1 failure")
+      mock_reponse = get_fail_message("Precheck 1 failure")
 
       conn =
         post(
@@ -59,7 +59,7 @@ defmodule CalibrationServiceApiWeb.CalibrationControllerTest do
     end
 
     test "should return an error when device precheck timeout", %{conn: conn} do
-      mock_reponse = get_error_message("Precheck 1 timeout")
+      mock_reponse = get_fail_message("Precheck 1 timeout")
 
       conn =
         post(
@@ -78,6 +78,11 @@ defmodule CalibrationServiceApiWeb.CalibrationControllerTest do
       status: status
     }
 
-  defp get_error_message(description),
+    defp get_fail_message(description),
     do: %{"error" => %{"message" => "Calibration failure", "description" => description}}
+
+    defp get_error_message(description),
+    do: %{"error" => %{"message" => "Calibration error", "description" => description}}
+
+
 end

@@ -22,11 +22,6 @@ defmodule CalibrationServiceApi.ElixirInterviewStarterTest do
     assert {:ok, calibration_session_test} == ElixirInterviewStarter.start(@valid_user_email)
   end
 
-  test "start/1 returns an error if the device does not precheck correctly in precheck_1 session" do
-    assert get_error_message("Precheck 1 failure") ==
-             ElixirInterviewStarter.start(@invalid_precheck_1_user_email)
-  end
-
   test "start/1 returns an error if the provided user already has an ongoing calibration session" do
     calibration_session_test =
       get_calibration_session(@valid_user_email, @session_precheck_1, @status_finished)
@@ -37,8 +32,13 @@ defmodule CalibrationServiceApi.ElixirInterviewStarterTest do
              ElixirInterviewStarter.start(@valid_user_email)
   end
 
+  test "start/1 returns an error if the device does not precheck correctly in precheck_1 session" do
+    assert get_fail_message("Precheck 1 failure") ==
+             ElixirInterviewStarter.start(@invalid_precheck_1_user_email)
+  end
+
   test "start/1 returns an error if a timeout occurs during the precheck_1 calibration session" do
-    assert get_error_message("Precheck 1 timeout") ==
+    assert get_fail_message("Precheck 1 timeout") ==
              ElixirInterviewStarter.start(@timeout_user_email)
   end
 
@@ -67,6 +67,9 @@ defmodule CalibrationServiceApi.ElixirInterviewStarterTest do
       status: status
     }
 
-  defp get_error_message(description),
+    defp get_fail_message(description),
     do: {:error, %{message: "Calibration failure", description: description}}
+
+    defp get_error_message(description),
+    do: {:error, %{message: "Calibration error", description: description}}
 end
