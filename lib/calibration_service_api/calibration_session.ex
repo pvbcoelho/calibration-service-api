@@ -7,8 +7,15 @@ defmodule CalibrationServiceApi.CalibrationSession do
 
   @type t() :: %__MODULE__{
           user_device: String.t(),
-          session: String.t(),
-          status: :on_going | :finished | :error | :timeout
+          session: Atom.t(),
+          status:
+            :on_going
+            | :finished
+            | :error
+            | :timeout
+            | :cartridge_status_error
+            | :submerged_in_water_error
+            | :cartridge_status_and_submerged_in_water_error
         }
 
   @derive [Jason.Encoder]

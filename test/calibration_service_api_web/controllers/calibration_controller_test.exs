@@ -1,10 +1,10 @@
 defmodule CalibrationServiceApiWeb.CalibrationControllerTest do
   use CalibrationServiceApiWeb.ConnCase
 
-  @valid_user_email "email_test@teste.com"
-  @invalid_precheck_1_user_email "email_precheck1.false@test.com"
+  @valid_user_email "email_test@test.com"
+  @invalid_precheck_1_user_email "email_precheck1_false@test.com"
 
-  @timeout_user_email "email_timeout@teste.com"
+  @timeout_precheck1_user_email "email_precheck1_timeout@test.com"
 
   @session_precheck_1 "precheck_1"
   @status_finished "finished"
@@ -30,7 +30,7 @@ defmodule CalibrationServiceApiWeb.CalibrationControllerTest do
     test "should return an error when device already has an ongoing calibration process", %{
       conn: conn
     } do
-      mock_reponse = get_error_message("Calibration session already on going")
+      mock_reponse = get_error_message("User already has an on going calibration session")
 
       post(
         conn,
@@ -64,7 +64,7 @@ defmodule CalibrationServiceApiWeb.CalibrationControllerTest do
       conn =
         post(
           conn,
-          Routes.calibration_path(conn, :start, user_email: @timeout_user_email)
+          Routes.calibration_path(conn, :start, user_email: @timeout_precheck1_user_email)
         )
 
       assert mock_reponse == json_response(conn, 422)
