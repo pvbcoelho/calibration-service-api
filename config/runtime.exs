@@ -47,4 +47,8 @@ if config_env() == :prod do
       port: port
     ],
     secret_key_base: secret_key_base
+
+  config :calibration_service_api, :timeouts,
+    precheks: 30_000,
+    calibration: 100_000
 end

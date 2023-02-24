@@ -24,4 +24,11 @@ defmodule CalibrationServiceApi.CalibrationSession do
     :session,
     :status
   ]
+
+  def get_new_calibration_session(user_email, session, status),
+    do: %__MODULE__{
+      user_device: user_email,
+      session: session,
+      status: status
+    }
 end

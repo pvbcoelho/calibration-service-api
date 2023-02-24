@@ -6,8 +6,8 @@ defmodule CalibrationServiceApi.Messaging.CalibrationServer do
 
   require Logger
 
-  @time_out 900
-  @time_out_calibrate 900
+  @time_out Application.compile_env(:calibration_service_api, :timeouts)[:precheks]
+  @time_out_calibrate Application.compile_env(:calibration_service_api, :timeouts)[:calibration]
 
   def start_link(%CalibrationSession{} = init_arg, process_name) do
     GenServer.start_link(__MODULE__, init_arg, name: process_name)

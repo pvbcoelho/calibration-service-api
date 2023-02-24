@@ -12,3 +12,7 @@ config :logger, level: :warn
 
 # Initialize plugs at runtime for faster test compilation
 config :phoenix, :plug_init_mode, :runtime
+
+config :calibration_service_api, :timeouts,
+  precheks: 900,
+  calibration: 900

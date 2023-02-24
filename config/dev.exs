@@ -49,3 +49,7 @@ config :phoenix, :stacktrace_depth, 20
 
 # Initialize plugs at runtime for faster development compilation
 config :phoenix, :plug_init_mode, :runtime
+
+config :calibration_service_api, :timeouts,
+  precheks: 30_000,
+  calibration: 100_000
